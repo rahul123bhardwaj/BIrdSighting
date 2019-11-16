@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "17553517948",
+    "firebase_url": "https://bird-sighting.firebaseio.com",
+    "project_id": "bird-sighting",
+    "storage_bucket": "bird-sighting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17553517948:android:1614fd347bb802fef1c8f9",
+        "android_client_info": {
+          "package_name": "com.example.birdsighting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17553517948-27u70f9sl95p8sben3966fjhs1f347jl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.birdsighting",
+            "certificate_hash": "db7dcdc3d1713e665e12e4f8903a974e64b9f082"
+          }
+        },
+        {
+          "client_id": "17553517948-rue872emf6g8aiqmh8331l06hrbbm40s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQowa-2Yc-I76HEncRO2QxzvE1hzoqNes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17553517948-rue872emf6g8aiqmh8331l06hrbbm40s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
