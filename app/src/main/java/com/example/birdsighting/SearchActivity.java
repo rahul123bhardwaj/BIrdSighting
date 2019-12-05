@@ -15,17 +15,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener{
 
-	Button buttonSearch;
+	Button buttonSearch, buttonImportance;
 	EditText editTextZipCode;
 	TextView textViewResult;
+	String objectKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
 		buttonSearch = findViewById(R.id.buttonSearch);
 		buttonSearch.setOnClickListener(this);
+
+		buttonImportance = findViewById(R.id.buttonImportance);
+		buttonImportance.setOnClickListener(this);
+		buttonImportance.setVisibility(View.INVISIBLE);
 
 		editTextZipCode = findViewById(R.id.editTextZipCode);
 		textViewResult = findViewById(R.id.textViewResult);
@@ -52,11 +59,26 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 		if (item.getItemId() == R.id.itemSearch) {
 			Intent intent = new Intent(this, SearchActivity.class);
 			startActivity(intent);
+			this.finish();
 		}
 
 		if (item.getItemId() == R.id.itemReport) {
 			Intent intent = new Intent(this, ReportActivity.class);
 			startActivity(intent);
+			this.finish();
+		}
+
+		if (item.getItemId() == R.id.itemHighestImportance) {
+			Intent intent = new Intent(this, ImportanceActivity.class);
+			startActivity(intent);
+			this.finish();
+		}
+
+		if (item.getItemId() == R.id.itemLogout) {
+			FirebaseAuth.getInstance().signOut();
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			this.finish();
 		}
 		return true;
 	}
@@ -64,17 +86,35 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 	@Override
 	public void onClick(View v) {
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
-		DatabaseReference myRef = database.getReference("BirdSightings");
+		final DatabaseReference myRef = database.getReference("BirdSightings");
+		final String zipCode = editTextZipCode.getText().toString();
+		final View view = v;
+		if (zipCode.isEmpty()){
+			//Showing message when zipcode is empty
+			Toast.makeText(SearchActivity.this, "Zip Code is Empty!", Toast.LENGTH_SHORT).show();
+			return; //exiting the function and not doing any more processing
+		}
 
-		String zipCode = editTextZipCode.getText().toString();
-		myRef.orderByChild("zipCode").equalTo(zipCode).addChildEventListener(new ChildEventListener() {
+		myRef.orderByChild("zipCode").equalTo(zipCode).limitToLast(1).addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 				BirdSighting foundSighting = dataSnapshot.getValue(BirdSighting.class);
+				Integer currentImportance = dataSnapshot.child("importance").getValue(Integer.class); //Fetching importance of last bird sighting of this zip code
+				objectKey = dataSnapshot.getKey();
 				String birdName = foundSighting.birdName;
-				String reporter = foundSighting.reporter;
+				String reporter = foundSighting.reporterEmail;
 
-				textViewResult.setText("Most recent spotting:\n" + birdName + "\t"+ "by " + reporter);
+				//Displaying result when Search button is pressed
+				if (view == buttonSearch) {
+					textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
+					buttonImportance.setVisibility(View.VISIBLE);
+				}
+				//Increasing the importance by 1 and showing a message to user
+				else if (view == buttonImportance) {
+					textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
+					myRef.child(objectKey).child("importance").setValue(currentImportance + 1);
+					Toast.makeText(SearchActivity.this, "This sighting's importance increased by 1", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			@Override

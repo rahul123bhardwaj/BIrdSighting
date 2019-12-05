@@ -8,4 +8,10 @@
     <item
         android:id="@+id/itemSearch"
         android:title="Search" />
+    <item
+        android:id="@+id/itemHighestImportance"
+        android:title="Highest Importance" />
+    <item
+        android:id="@+id/itemLogout"
+        android:title="Logout" />
 </menu>

@@ -3,15 +3,17 @@ package com.example.birdsighting;
 public class BirdSighting {
 	public String birdName;
 	public String zipCode;
-	public String reporter;
+	public String reporterEmail;
+	public Integer importance;
 
 	public BirdSighting() {
 	}
 
-	public BirdSighting(String birdName, String zipCode, String reporter) {
+	public BirdSighting(String birdName, String zipCode, String reporterEmail, Integer importance) {
 		this.birdName = birdName;
 		this.zipCode = zipCode;
-		this.reporter = reporter;
+		this.reporterEmail = reporterEmail;
+		this.importance = importance;
 	}
 
 }

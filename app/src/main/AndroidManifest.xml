@@ -9,8 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity" android:label="Search"></activity>
-        <activity android:name=".ReportActivity" android:label="Report">
+        <activity android:name=".ImportanceActivity" android:label="Highest Importance Sighting"></activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="Search" />
+        <activity
+            android:name=".ReportActivity"
+            android:label="Report">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
