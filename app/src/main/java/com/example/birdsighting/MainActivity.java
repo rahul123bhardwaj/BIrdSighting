@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	@Override
 	public void onStart() {
 		super.onStart();
-		// Check if user is signed in already signed in and take him to Portal Activity directly.
+		// Check if user is signed in already signed in and take him to Importance Activity directly.
 		FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 		if(currentUser != null) {
 			Intent intent = new Intent(MainActivity.this, ImportanceActivity.class);
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 							@Override
 							public void onComplete(@NonNull Task<AuthResult> task) {
 								if (task.isSuccessful()) {
-									// On success, display message and take user to Report Activity
+									// On success, display message and take user to Importance Activity
 									Toast.makeText(MainActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
 									Intent intent = new Intent(MainActivity.this, ImportanceActivity.class);
 									startActivity(intent);
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 							@Override
 							public void onComplete(@NonNull Task<AuthResult> task) {
 								if (task.isSuccessful()) {
-									// Take user to Report Activity when login is successful
+									// Take user to Importance Activity when login is successful
 									Intent intent = new Intent(MainActivity.this, ImportanceActivity.class);
 									startActivity(intent);
 								} else {

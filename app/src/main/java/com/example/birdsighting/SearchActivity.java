@@ -89,54 +89,54 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 		final DatabaseReference myRef = database.getReference("BirdSightings");
 		final String zipCode = editTextZipCode.getText().toString();
 		final View view = v;
-		if (zipCode.isEmpty()){
-			//Showing message when zipcode is empty
+		if (zipCode.isEmpty()) {
+			//Showing error message when zipcode is empty and not doing any processing
 			Toast.makeText(SearchActivity.this, "Zip Code is Empty!", Toast.LENGTH_SHORT).show();
-			return; //exiting the function and not doing any more processing
 		}
+		else {
+			myRef.orderByChild("zipCode").equalTo(zipCode).limitToLast(1).addChildEventListener(new ChildEventListener() {
+				@Override
+				public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+					BirdSighting foundSighting = dataSnapshot.getValue(BirdSighting.class);
+					Integer currentImportance = dataSnapshot.child("importance").getValue(Integer.class); //Fetching importance of last bird sighting of this zip code
+					objectKey = dataSnapshot.getKey();
+					String birdName = foundSighting.birdName;
+					String reporter = foundSighting.reporterEmail;
 
-		myRef.orderByChild("zipCode").equalTo(zipCode).limitToLast(1).addChildEventListener(new ChildEventListener() {
-			@Override
-			public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-				BirdSighting foundSighting = dataSnapshot.getValue(BirdSighting.class);
-				Integer currentImportance = dataSnapshot.child("importance").getValue(Integer.class); //Fetching importance of last bird sighting of this zip code
-				objectKey = dataSnapshot.getKey();
-				String birdName = foundSighting.birdName;
-				String reporter = foundSighting.reporterEmail;
-
-				//Displaying result when Search button is pressed
-				if (view == buttonSearch) {
-					textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
-					buttonImportance.setVisibility(View.VISIBLE);
+					//Displaying result when Search button is pressed
+					if (view == buttonSearch) {
+						textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
+						buttonImportance.setVisibility(View.VISIBLE);
+					}
+					//Increasing the importance by 1 and showing a message to user
+					else if (view == buttonImportance) {
+						textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
+						myRef.child(objectKey).child("importance").setValue(currentImportance + 1);
+						Toast.makeText(SearchActivity.this, "This sighting's importance increased by 1", Toast.LENGTH_SHORT).show();
+					}
 				}
-				//Increasing the importance by 1 and showing a message to user
-				else if (view == buttonImportance) {
-					textViewResult.setText("Most recent sighting at " + zipCode + ":\n" + birdName + "\t" + " by " + reporter);
-					myRef.child(objectKey).child("importance").setValue(currentImportance + 1);
-					Toast.makeText(SearchActivity.this, "This sighting's importance increased by 1", Toast.LENGTH_SHORT).show();
+
+				@Override
+				public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
 				}
-			}
 
-			@Override
-			public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+				@Override
+				public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-			}
+				}
 
-			@Override
-			public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+				@Override
+				public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-			}
+				}
 
-			@Override
-			public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+				@Override
+				public void onCancelled(@NonNull DatabaseError databaseError) {
 
-			}
+				}
+			});
 
-			@Override
-			public void onCancelled(@NonNull DatabaseError databaseError) {
-
-			}
-		});
-
+		}
 	}
 }

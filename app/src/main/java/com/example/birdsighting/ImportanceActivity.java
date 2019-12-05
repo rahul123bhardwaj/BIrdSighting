@@ -32,6 +32,7 @@ public class ImportanceActivity extends AppCompatActivity {
 		FirebaseDatabase database = FirebaseDatabase.getInstance();
 		final DatabaseReference myRef = database.getReference("BirdSightings");
 
+		//Sorting Bird Sightings by Importance and taking the last one
 		myRef.orderByChild("importance").limitToLast(1).addChildEventListener(new ChildEventListener() {
 			@Override
 			public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -41,6 +42,7 @@ public class ImportanceActivity extends AppCompatActivity {
 				String zipCode = foundSighting.zipCode;
 				Integer importance = foundSighting.importance;
 				textViewHighestImportance.setText("Most important sighting:\n" + birdName + " by " +reporter + " at " + zipCode + "\n" + "Importance: " + importance.toString());
+				//Updating the text view with details of the sighting and its importance
 			}
 
 			@Override
@@ -73,6 +75,7 @@ public class ImportanceActivity extends AppCompatActivity {
 	}
 
 	@Override
+	//Adding Menu Navigation
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 		if (item.getItemId() == R.id.itemSearch) {
@@ -94,7 +97,7 @@ public class ImportanceActivity extends AppCompatActivity {
 		}
 
 		if (item.getItemId() == R.id.itemLogout) {
-			FirebaseAuth.getInstance().signOut();
+			FirebaseAuth.getInstance().signOut(); //Signing out user and taking to Login/Signup Screen
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 			this.finish();
